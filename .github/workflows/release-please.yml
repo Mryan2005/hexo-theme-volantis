@@ -4,7 +4,7 @@ on:
 
 jobs:
   release-please:
-    if: github.repository == 'volantis-x/hexo-theme-volantis'
+    if: github.repository == 'mryan2005/hexo-theme-volantis'
     runs-on: ubuntu-latest
     steps:
       - uses: google-github-actions/release-please-action@v4
@@ -14,7 +14,7 @@ jobs:
           include-v-in-tag: false
           default-branch: dev
   npm-publish:
-    if: ${{ contains(github.event.head_commit.message, 'chore(dev)') && contains(github.event.head_commit.message, 'release') && github.repository == 'volantis-x/hexo-theme-volantis' }}
+    if: ${{ contains(github.event.head_commit.message, 'chore(dev)') && contains(github.event.head_commit.message, 'release') && github.repository == 'mryan2005/hexo-theme-volantis' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,32 +28,17 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
   merge:
-    if: ${{ contains(github.event.head_commit.message, 'chore(dev)') && contains(github.event.head_commit.message, 'release') && github.repository == 'volantis-x/hexo-theme-volantis' }}
+    if: ${{ contains(github.event.head_commit.message, 'chore(dev)') && contains(github.event.head_commit.message, 'release') && github.repository == 'mryan2005/hexo-theme-volantis' }}
     runs-on: ubuntu-latest
     steps:
       - name: merge-to-main
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git clone https://github.com/volantis-x/hexo-theme-volantis.git hexo-theme-volantis
+          git clone https://github.com/mryan2005/hexo-theme-volantis.git hexo-theme-volantis
           cd hexo-theme-volantis
           git fetch --all
           git checkout main
           git reset --hard dc9134662502ed2aa8d39dfa09ffe81650a2b024
           git merge origin/dev
-          git push --force "https://github-actions[bot]:${{ secrets.GITHUB_TOKEN }}@github.com/volantis-x/hexo-theme-volantis.git" main:main
-      - name: sync-coding
-        run: |
-          curl -u ${{ secrets.CODING_TOKEN_API }} \
-             -v -X POST  'https://volantis-x.coding.net/api/cci/job/387490/trigger' \
-             -H 'Content-Type: application/json' \
-             -d '
-              {
-                "envs": [
-                  {
-                    "name": "BRANCH",
-                    "value": "main",
-                    "sensitive": 0
-                  }
-                ]
-              }'
+          git push --force "https://github-actions[bot]:${{ secrets.GITHUB_TOKEN }}@github.com/mryan2005/hexo-theme-volantis.git" main:main
